@@ -3,17 +3,21 @@
 //304,320,336,352,368,384,400,416,432,448,464,480,496
 
 const int configFlag = 0;
-const int passwordFlag = 16;
-const int wifiFlag = 32;
+//const int passwordFlag = 16;
+//const int wifiFlag = 32;
+//const int wifiPassFlag = 80;
+
+const int passwordFlag = 32;
+const int wifiFlag = 64;
+const int wifiPassFlag = 96;
 // using address 80 since my board has problem with 48 to 80...
-const int wifiPassFlag = 80;
 // ----------------------------------------------------------------------  EEPROM
 void EEPROM_write_to_address(int address, String stringValue) {
 
-  char value[16];
-  stringValue.toCharArray(value, 16);
+  char value[32];
+  stringValue.toCharArray(value, 32);
 
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < 32; i++) {
     if (i < strlen(value)) {
       // write to memory
       EEPROM.write(address + i, (int)value[i]);
@@ -40,7 +44,7 @@ String EEPROM_read_from_address(int address) {
   int counter = 0;
   String result = "";
   EEPROM.begin(512);
-  for (int i = address; i < address + 16; i++) {
+  for (int i = address; i < address + 32; i++) {
     temp = EEPROM.read(i);
     delay(50);
     if (temp != NULL && int(temp) != 0) {
@@ -48,6 +52,8 @@ String EEPROM_read_from_address(int address) {
       result.concat(temp);
     }
   }
+  Serial.print("Data read: ");
+  Serial.println(result);
   return result;
 }
 // ----------------------------------------------------------------------  configuration flag
@@ -62,7 +68,7 @@ bool isConfigured() {
 void setToConfigured() {
   EEPROM_write_to_address(configFlag, "true");
   Serial.println("Configuration saved");
-  Serial.println("Restarting..");
+  Serial.println("Restart..");
   delay(1500);
   ESP.restart();
 }
@@ -71,7 +77,7 @@ void destroyConfiguration() {
   EEPROM_clear();
   EEPROM_write_to_address(configFlag, "false");
   Serial.println("Configuration destroyed!!");
-  Serial.println("Restarting..");
+  Serial.println("Restart..");
   delay(1500);
   ESP.restart();
 }
