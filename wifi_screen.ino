@@ -11,9 +11,9 @@
 StaticJsonBuffer<200> jsonBuffer;
 
 const char* username = "admin";
-char password[16] = "";
-char wifi[16];
-char wifi_pass[16];
+char password[32] = "";
+char wifi[32];
+char wifi_pass[32];
 
 bool shouldPing = false;
 int refreshRate = 3000;
@@ -81,12 +81,11 @@ void setup(void) {
   lcd.begin();
   lcd.backlight();
   lcd.clear();
-
   if (isConfigured()) {
     Serial.println("Reading config");
-    get_wifi().toCharArray(wifi, 16);
-    get_wifi_pass().toCharArray(wifi_pass, 16);
-    get_password().toCharArray(password, 16);
+    get_wifi().toCharArray(wifi, 32);
+    get_wifi_pass().toCharArray(wifi_pass, 32);
+    get_password().toCharArray(password, 32);
 
     lcd.clear();
     lcd.print("Connecting to:");
@@ -116,13 +115,13 @@ void setup(void) {
           Serial.println(configurationTemp);
           switch (i) {
             case 0:
-              configurationTemp.toCharArray(password, 16);
+              configurationTemp.toCharArray(password, 32);
               break;
             case 1:
-              configurationTemp.toCharArray(wifi, 16);
+              configurationTemp.toCharArray(wifi, 32);
               break;
             case 2:
-              configurationTemp.toCharArray(wifi_pass, 16);
+              configurationTemp.toCharArray(wifi_pass, 32);
               configured = true;
               break;
             default:
@@ -159,10 +158,8 @@ void setup(void) {
   Serial.println("Connected");
 
   lcd.clear();
-  lcd.print("wifi: ");
   lcd.print(wifi);
   lcd.setCursor(0, 1);
-  lcd.print("IP: ");
   lcd.print(WiFi.localIP());
 
 
@@ -197,7 +194,7 @@ void loop(void) {
         jsonBuffer.clear();
       }
     } else {
-      writeToDisplay("Something went", "wrong!!!")
+      writeToDisplay("Something went", "wrong!!!");
     }
     http.end();
     delay(refreshRate);
