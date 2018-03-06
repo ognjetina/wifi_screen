@@ -78,6 +78,8 @@ void handleNotFound() {
 void setup(void) {
   Serial.begin(9600);
 
+  //destroyConfiguration();
+
   lcd.begin();
   lcd.backlight();
   lcd.clear();
@@ -182,7 +184,7 @@ void loop(void) {
     Serial.println(refreshRate);
     HTTPClient http;
     http.begin(pingAddress);
-    int httpCode = http.GET();                                                                  //Send the request
+    int httpCode = http.GET();
 
     if (httpCode = 200) {
       JsonObject& root = jsonBuffer.parseObject(http.getString());
